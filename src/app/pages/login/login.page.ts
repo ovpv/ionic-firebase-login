@@ -1,33 +1,35 @@
-import { Component, OnInit } from "@angular/core";
-import { NavController } from "@ionic/angular";
-import * as firebase from "firebase";
-import "firebase/auth";
+import { ToastService } from './../../services/toast.service';
+import { Component, OnInit } from '@angular/core';
+import * as firebase from 'firebase';
+import 'firebase/auth';
+import { NavController } from '@ionic/angular';
 
 @Component({
-  selector: "app-login",
-  templateUrl: "./login.page.html",
-  styleUrls: ["./login.page.scss"]
+	selector: 'app-login',
+	templateUrl: './login.page.html',
+	styleUrls: ['./login.page.scss']
 })
 export class LoginPage implements OnInit {
-  email: string;
-  password: string;
+	email: string;
+	password: string;
 
-  constructor(public navCtrl: NavController) {}
+	constructor(public navCtrl: NavController, public toast: ToastService) {}
 
-  ngOnInit() {}
+	ngOnInit() {}
 
-  onLogin(email, password) {
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(data => {
-        this.navCtrl.navigateRoot("/home");
-      })
-      .catch(function(error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // ...
-      });
-  }
+	onLogin(email, password) {
+		firebase
+			.auth()
+			.signInWithEmailAndPassword(email, password)
+			.then(data => {
+				this.navCtrl.navigateRoot('home');
+			})
+			.catch(error => {
+				// Handle Errors here.
+				const errorCode = error.code;
+				const errorMessage = error.message;
+				this.toast.present(errorMessage);
+				// ...
+			});
+	}
 }
